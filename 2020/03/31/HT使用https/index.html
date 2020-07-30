@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>HT for web 编辑器使用https | NoRain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简述 由于公司事情诸多，前段时间领导交给我个任务研究HT编辑器，经过一通改造，终于要拿出手了，当部署完使用https地址访问的时候，就出问题了。先记录下这个问题解决方案，毕竟ht的资料太少了。HT for web部署之后通过https访问的问题 因为使用https，HT里面的ws连接自动变成了wss。导致有一个websocket连接失败">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HT for web 编辑器使用https">
+<meta property="og:url" content="http://yoursite.com/2020/03/31/HT%E4%BD%BF%E7%94%A8https/index.html">
+<meta property="og:site_name" content="NoRain">
+<meta property="og:description" content="简述 由于公司事情诸多，前段时间领导交给我个任务研究HT编辑器，经过一通改造，终于要拿出手了，当部署完使用https地址访问的时候，就出问题了。先记录下这个问题解决方案，毕竟ht的资料太少了。HT for web部署之后通过https访问的问题 因为使用https，HT里面的ws连接自动变成了wss。导致有一个websocket连接失败">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/2020-4-1.png">
+<meta property="og:image" content="http://yoursite.com/images/202041ht.png">
+<meta property="article:published_time" content="2020-03-31T09:53:51.000Z">
+<meta property="article:modified_time" content="2020-04-01T02:15:57.284Z">
+<meta property="article:author" content="NoRain">
+<meta property="article:tag" content="HT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/2020-4-1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="NoRain" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">NoRain</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-HT使用https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/" class="article-date">
+  <time datetime="2020-03-31T09:53:51.000Z" itemprop="datePublished">2020-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HT for web 编辑器使用https
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><ul>
+<li>由于公司事情诸多，前段时间领导交给我个任务研究HT编辑器，经过一通改造，终于要拿出手了，当部署完使用https地址访问的时候，就出问题了。先记录下这个问题解决方案，毕竟ht的资料太少了。<h2 id="HT-for-web部署之后通过https访问的问题"><a href="#HT-for-web部署之后通过https访问的问题" class="headerlink" title="HT for web部署之后通过https访问的问题"></a>HT for web部署之后通过https访问的问题</h2></li>
+<li>因为使用https，HT里面的ws连接自动变成了wss。导致有一个websocket连接失败</li>
+</ul>
+<a id="more"></a>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><ol>
+<li><strong>修改server目录下的config.ini配置文件</strong><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">enableHttps = true </span><br><span class="line">sslKey = E:\hightopo\projects\key\key.pem     #这个是密钥文件</span><br><span class="line">sslCert = E:\hightopo\projects\key\file.crt   #这个是证书</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li><red>sslKey 文件经过测试，我是用key结尾的文件也可以使用</red></li>
+</ul>
+<ol start="2">
+<li><strong>密钥文件和证书文件生成方法：</strong><ul>
+<li>下载openssl（我这边是使用windows版本的openssl）<ul>
+<li>下载地址:<a target="_blank" rel="noopener" href="http://gnuwin32.sourceforge.net/packages/openssl.htm">http://gnuwin32.sourceforge.net/packages/openssl.htm</a></li>
+</ul>
+</li>
+<li>运行openssl,输入以下两个命令  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生成密钥</span></span><br><span class="line">req -new -newkey rsa:2048 -nodes -out mydomain.csr -keyout private.key</span><br><span class="line"><span class="comment">//生成证书</span></span><br><span class="line">x509 -req -days 365 -in mydomain.csr -signkey private.key -out mydomain.crt</span><br></pre></td></tr></table></figure></li>
+<li>运行完成之后，会在opensll的bin目录下生成三个文件,我们只需要其中的crt和key文件，照着上面的解决方法配置下就行了<br>  mydomain.csr<br>  mydomain.crt<br>  private.key</li>
+</ul>
+</li>
+</ol>
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><p><img src="/images/2020-4-1.png" alt="配置图"></p>
+<p><img src="/images/202041ht.png" alt="运行结果"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/31/HT%E4%BD%BF%E7%94%A8https/" data-id="ckd8isjfi000260u1eajs0kq4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HT/" rel="tag">HT</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用git命令同步git
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/11/HT%E7%BC%96%E8%BE%91%E5%99%A8%E7%9A%84%E6%94%B9%E9%80%A0%E4%B9%8B%E8%B7%AF/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">HT编辑器的改造(有时间在写这篇文章)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/30/4-PMP%E8%BF%9B%E5%BA%A6%E7%AE%A1%E7%90%86/">4.PMP进度管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/1-PMP%E6%95%B4%E5%90%88%E7%AE%A1%E7%90%86/">1.PMP整合管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/">&#39; docker操作 &#39;</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/">使用git命令同步git</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/">HT for web 编辑器使用https</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 NoRain<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>使用git命令同步git | NoRain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="记录下使用git命令clon存储库进行开发 首先先拿到git的ssh地址 命令行进入项目根目录文件夹，执行  git init 创建git文件结构（隐藏的.git文件夹。.git文件夹保存着历史版本信息以及git服务器的配置信息，删除之后就是一个干净的普通文件夹了）。 执行 git pull   git路径 把初始结构下载到本地（服务器端至少要有一个文件，否则pull的时候会报错fatal: Co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用git命令同步git">
+<meta property="og:url" content="http://yoursite.com/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/index.html">
+<meta property="og:site_name" content="NoRain">
+<meta property="og:description" content="记录下使用git命令clon存储库进行开发 首先先拿到git的ssh地址 命令行进入项目根目录文件夹，执行  git init 创建git文件结构（隐藏的.git文件夹。.git文件夹保存着历史版本信息以及git服务器的配置信息，删除之后就是一个干净的普通文件夹了）。 执行 git pull   git路径 把初始结构下载到本地（服务器端至少要有一个文件，否则pull的时候会报错fatal: Co">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-17T01:45:13.000Z">
+<meta property="article:modified_time" content="2020-04-17T14:14:40.035Z">
+<meta property="article:author" content="NoRain">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="NoRain" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">NoRain</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-使用git命令同步git" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/" class="article-date">
+  <time datetime="2020-04-17T01:45:13.000Z" itemprop="datePublished">2020-04-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用git命令同步git
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="记录下使用git命令clon存储库进行开发"><a href="#记录下使用git命令clon存储库进行开发" class="headerlink" title="记录下使用git命令clon存储库进行开发"></a>记录下使用git命令clon存储库进行开发</h1><ul>
+<li>首先先拿到git的ssh地址</li>
+<li>命令行进入项目根目录文件夹，执行  git init 创建git文件结构（隐藏的.git文件夹。.git文件夹保存着历史版本信息以及git服务器的配置信息，删除之后就是一个干净的普通文件夹了）。</li>
+<li>执行 git pull   git路径 把初始结构下载到本地（服务器端至少要有一个文件，否则pull的时候会报错fatal: Couldn’t find remote ref HEAD）</li>
+<li>执行 git add . （注意最后的.）把修改提交到本地缓存</li>
+<li>执行 git commit -m ‘提交的注释信息’ 提交到本地库</li>
+<li>执行 git remote add origin git路径 把本地库设置同步到远程服务器</li>
+<li>执行 git push –set-upstream git路径 master 设定默认上传地址，并且进行第一次同步到服务器<a id="more"></a>
+
+</li>
+</ul>
+<h1 id="日常开发使用"><a href="#日常开发使用" class="headerlink" title="日常开发使用"></a>日常开发使用</h1><h2 id="本地代码修改后，执行如下的指令："><a href="#本地代码修改后，执行如下的指令：" class="headerlink" title="本地代码修改后，执行如下的指令："></a>本地代码修改后，执行如下的指令：</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git add –A                  <span class="comment">#把本地所有的修改提交到缓存</span></span><br><span class="line">git commit –m <span class="string">&#x27;修改描述&#x27;</span>    <span class="comment">#把修改提交到本地</span></span><br><span class="line">git push                    <span class="comment">#把修改推送到服务器</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="获取服务器端的修改：git-pull3、add的不同参数："><a href="#获取服务器端的修改：git-pull3、add的不同参数：" class="headerlink" title="获取服务器端的修改：git pull3、add的不同参数："></a>获取服务器端的修改：git pull3、add的不同参数：</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git add <span class="literal">-A</span>      <span class="comment">#提交所有变化</span></span><br><span class="line">git add <span class="literal">-u</span>      <span class="comment">#提交被修改(modified)和被删除(deleted)文件，不包括新文件(new)</span></span><br><span class="line">git add .       <span class="comment">#提交新文件(new)和被修改(modified)文件，不包括被删除(deleted)文件</span></span><br></pre></td></tr></table></figure>
+<h1 id="Git分支操作"><a href="#Git分支操作" class="headerlink" title="Git分支操作"></a>Git分支操作</h1><ol>
+<li>查看远程分支:git branch -a</li>
+<li>查看本地分支:git branch</li>
+<li>切换分支:git checkout -b v0.9rc1 origin/v0.9rc1</li>
+<li>合并分支：git merge <branch> #带上一个你想合并进来的一个分支名称。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/" data-id="ckd8isjfm000560u17zxv9gs2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          &#39; docker操作 &#39;
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">HT for web 编辑器使用https</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/30/4-PMP%E8%BF%9B%E5%BA%A6%E7%AE%A1%E7%90%86/">4.PMP进度管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/1-PMP%E6%95%B4%E5%90%88%E7%AE%A1%E7%90%86/">1.PMP整合管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/">&#39; docker操作 &#39;</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/">使用git命令同步git</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/">HT for web 编辑器使用https</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 NoRain<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

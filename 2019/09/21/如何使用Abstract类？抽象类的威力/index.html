@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>如何使用Abstract类？抽象类的威力 | NoRain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介：&amp;emsp;&amp;emsp;今天我想谈谈如何使用抽象类，以及抽象类真正的威力。本文将结合具体业务来说明如何使用抽象类。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用Abstract类？抽象类的威力">
+<meta property="og:url" content="http://yoursite.com/2019/09/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Abstract%E7%B1%BB%EF%BC%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%A8%81%E5%8A%9B/index.html">
+<meta property="og:site_name" content="NoRain">
+<meta property="og:description" content="简介：&amp;emsp;&amp;emsp;今天我想谈谈如何使用抽象类，以及抽象类真正的威力。本文将结合具体业务来说明如何使用抽象类。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/1525201-20190901113443986-628755385.png">
+<meta property="og:image" content="http://yoursite.com/images/1525201-20190901113725385-1451695077.png">
+<meta property="og:image" content="http://yoursite.com/images/1525201-20190901114636396-1130030246.png">
+<meta property="article:published_time" content="2019-09-21T02:56:23.000Z">
+<meta property="article:modified_time" content="2019-09-23T11:32:52.555Z">
+<meta property="article:author" content="NoRain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/1525201-20190901113443986-628755385.png">
+  
+    <link rel="alternate" href="/atom.xml" title="NoRain" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">NoRain</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-如何使用Abstract类？抽象类的威力" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Abstract%E7%B1%BB%EF%BC%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%A8%81%E5%8A%9B/" class="article-date">
+  <time datetime="2019-09-21T02:56:23.000Z" itemprop="datePublished">2019-09-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      如何使用Abstract类？抽象类的威力
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h2><p>&emsp;&emsp;今天我想谈谈如何使用抽象类，以及抽象类真正的威力。本文将结合具体业务来说明如何使用抽象类。</p>
+<a id="more"></a>
+
+<h2 id="业务简述："><a href="#业务简述：" class="headerlink" title="业务简述："></a>业务简述：</h2><p>&emsp;&emsp;本人之前是做PMS（物业管理系统），公司主要业务的是美国的租房业务。由于美国租房和中国租房在后台可能有点差别，本文不做叙述。下面我们直入主题。</p>
+<p>&emsp;&emsp;用户点击租房之后，我们是要创建一个订单，而在创建订单的时候，需要做很多事，本文只做一个简化版的，避免偏离主题。当创建订单时，需要做以下几件事：</p>
+<p>&emsp;&emsp;    1. Available 检查是否可用<br>&emsp;&emsp;    2. MinDay 检查 最小入住天数是否匹配<br>&emsp;&emsp;    3. Check in/Check out 检查入住时间和离开时间是否匹配<br>&emsp;&emsp;    4. quote 计算价格。</p>
+<p>&emsp;&emsp;而针对前三中，只是判断该房可不可以租。而且有可能以后还会加入其它规则，如果把它们写在一起也是可以的，但不利于扩展。下面看下我如何使用abstract类来实现他的扩展性：</p>
+<h2 id="正文："><a href="#正文：" class="headerlink" title="正文："></a>正文：</h2><ol>
+<li><h4 id="第一步，创建以下类"><a href="#第一步，创建以下类" class="headerlink" title="第一步，创建以下类"></a>第一步，创建以下类</h4><ol>
+<li><p><strong>创建类 OrderAddDTO.cs</strong>　</p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderAddDTO</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 物业Id</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> Guid PropertyId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 入住时间</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> DateTime CheckInDate &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 离开时间</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> DateTime CheckOutDate &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//<span class="doctag">TODO:</span>其它信息</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>创建抽象类 PropertyValidAbstract.cs</strong></p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">protected</span> PropertyValidAbstract _baseValid;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetNext</span>(<span class="params">PropertyValidAbstract BaseValid</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._baseValid = BaseValid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> ErrorMsg &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>创建Available 验证类：AvailableValid，并继承自PropertyValidAbstract</strong></p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AvailableValid</span> : <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span>取出该property(物业)的 Available</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//if (计算该物业在dto.CheckInDate-dto.CheckOutDate时间内是否可用)</span></span><br><span class="line">        <span class="comment">//&#123;</span></span><br><span class="line">        <span class="comment">//不可用，则对ErrorMsg赋值，并返回false；</span></span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span>具体实现</span></span><br><span class="line">        <span class="comment">//&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果没有下一步验证了，则返回true</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>._baseValid == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果可用，则进入下一个验证</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._baseValid.IsValid(dto);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建MinDay 验证类MinDayValid.cs，并继承自PropertyValidAbstract</strong></p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MinDayValid</span> : <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span>取出该property(物业)的 MinDay规则</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//模拟minday规则，具体的minday比这个复杂多了</span></span><br><span class="line">        <span class="keyword">var</span> checkDays = (dto.CheckOutDate - dto.CheckInDate).Days + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (checkDays&lt;<span class="number">3</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            ErrorMsg = <span class="string">&quot;stay at least 3 days&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果没有下一步验证了，则返回true</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>._baseValid == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果满足，则进入下一个验证</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._baseValid.IsValid(dto);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>创建CheckIn/Out验证类：CheckInOutDateValid.cs，并继承自PropertyValidAbstract</strong></p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CheckInOutDateValid</span> : <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//模拟checkin/checkout规则判断</span></span><br><span class="line">        DayOfWeek checkInWeek = dto.CheckInDate.DayOfWeek;</span><br><span class="line">        DayOfWeek checkOutWeek = dto.CheckOutDate.DayOfWeek;</span><br><span class="line">        <span class="keyword">if</span> (checkOutWeek!= DayOfWeek.Saturday||checkInWeek!= DayOfWeek.Tuesday)</span><br><span class="line">        &#123;</span><br><span class="line">            ErrorMsg = <span class="string">&quot;checkin/out Does not meet the&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//如果没有下一步验证了，则返回true</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>._baseValid==<span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._baseValid.IsValid(dto);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>最后在创建一个验证配置类：ValidSettings.cs，并继承自PropertyValidAbstract</strong></p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ValidSettings</span>: <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//先进行AvailableValid</span></span><br><span class="line">    PropertyValidAbstract BaseValid = <span class="keyword">new</span> AvailableValid();</span><br><span class="line">        <span class="comment">//在验证MinDayValid</span></span><br><span class="line">        <span class="keyword">var</span> mindayvalid = <span class="keyword">new</span> MinDayValid();</span><br><span class="line">        BaseValid.SetNext(mindayvalid);</span><br><span class="line">        <span class="comment">//最后是CheckInOutDateValid</span></span><br><span class="line">        <span class="keyword">var</span> checkinOutvalid = <span class="keyword">new</span> CheckInOutDateValid();</span><br><span class="line">        mindayvalid.SetNext(checkinOutvalid);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> BaseValid.IsValid(dto);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><h4 id="在控制台模拟："><a href="#在控制台模拟：" class="headerlink" title="在控制台模拟："></a>在控制台模拟：</h4> <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span>这个dto，是从客户端传过来的，在这模拟下</span></span><br><span class="line">    OrderAddDTO dto = <span class="keyword">new</span> OrderAddDTO();</span><br><span class="line">    dto.CheckInDate = DateTime.Now;</span><br><span class="line">    dto.CheckOutDate = DateTime.Now.AddDays(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    PropertyValidAbstract baseValid = <span class="keyword">new</span> ValidSettings();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (baseValid.IsValid(dto)==<span class="literal">false</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(PropertyValidAbstract.ErrorMsg);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span>计算价格</span></span><br><span class="line">        Console.WriteLine(<span class="string">&quot;计算价格&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Console.ReadKey();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="运行结果："><a href="#运行结果：" class="headerlink" title="运行结果："></a>运行结果：</h4><ol>
+<li><p>测试不满足minday规则<br><img src="/images/1525201-20190901113443986-628755385.png" alt="测试不满足minday规则"></p>
+</li>
+<li><p>测试都满足<br><img src="/images/1525201-20190901113725385-1451695077.png" alt="测试都满足"></p>
+</li>
+</ol>
+</li>
+</ol>
+<ol start="4">
+<li><p>运行结果都没问题，这时候可能客户来需求，你再给我加个maxday（最大入住天数规则）。这时候我们可以这么做：</p>
+<ol>
+<li><p><strong>新建一个maxday验证类：MaxDayValid.cs，并继承自PropertyValidAbstract</strong></p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MaxDayValid</span> : <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span>取出该property(物业)的 MaxDay规则</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//模拟maxday规则，具体的maxday比这个复杂多了</span></span><br><span class="line">        <span class="keyword">var</span> checkDays = (dto.CheckOutDate - dto.CheckInDate).Days + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (checkDays &gt;<span class="number">300</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            ErrorMsg = <span class="string">&quot;stay up to 300 days&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果没有下一步验证了，则返回true</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>._baseValid == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._baseValid.IsValid(dto);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>修改ValidSettings.cs类</strong></p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ValidSettings</span>: <span class="title">PropertyValidAbstract</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">OrderAddDTO dto</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//先进行AvailableValid</span></span><br><span class="line">        PropertyValidAbstract BaseValid = <span class="keyword">new</span> AvailableValid();</span><br><span class="line">        <span class="comment">//在验证MinDayValid</span></span><br><span class="line">        <span class="keyword">var</span> mindayvalid = <span class="keyword">new</span> MinDayValid();</span><br><span class="line">        BaseValid.SetNext(mindayvalid);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//新增一个maxday</span></span><br><span class="line">        <span class="keyword">var</span> maxdayvalid = <span class="keyword">new</span> MaxDayValid();</span><br><span class="line">        mindayvalid.SetNext(maxdayvalid);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//最后是CheckInOutDateValid</span></span><br><span class="line">        <span class="keyword">var</span> checkinOutvalid = <span class="keyword">new</span> CheckInOutDateValid();</span><br><span class="line">        maxdayvalid.SetNext(checkinOutvalid);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> BaseValid.IsValid(dto);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行结果：<br><img src="/images/1525201-20190901114636396-1130030246.png" alt="运行结果："></p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="结束语："><a href="#结束语：" class="headerlink" title="结束语："></a>结束语：</h2><ul>
+<li>希望我的文章能对你有所帮助，其实以上使用抽象类的例子也是一个设计模式的例子，好像是叫啥责任链吧。关于设计模式不能死记住，得做到“得其意，忘其形”。谢谢观看!</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/09/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Abstract%E7%B1%BB%EF%BC%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%A8%81%E5%8A%9B/" data-id="ckd8isjfp000a60u1h5vi6ndq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/09/22/IdentityServer4%E7%9A%84%E6%9C%80%E4%BD%B3%E4%BD%BF%E7%94%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          IdentityServer4的最佳使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/19/%E8%A7%A3%E5%86%B3-net-Core%E4%B8%ADWebApi%E8%87%AA%E5%8A%A8Model%E9%AA%8C%E8%AF%81%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E4%B8%8D%E8%83%BD%E7%BB%9F%E4%B8%80/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">解决.net Core中WebApi自动Model验证导致数据格式不能统一</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/30/4-PMP%E8%BF%9B%E5%BA%A6%E7%AE%A1%E7%90%86/">4.PMP进度管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/1-PMP%E6%95%B4%E5%90%88%E7%AE%A1%E7%90%86/">1.PMP整合管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/">&#39; docker操作 &#39;</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/">使用git命令同步git</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/">HT for web 编辑器使用https</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 NoRain<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>IdentityServer4的最佳使用 | NoRain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介&amp;emsp;&amp;emsp;本人做微服务项目也有一段时间了，在微服务中让我感触颇深的就是这个IdentityServer4了，ID4（IdentityServer4的简称）中涉及的概念颇多，本文不谈概念（我怕读者没耐心看下去），在这分享下我个人的使用心得。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IdentityServer4的最佳使用">
+<meta property="og:url" content="http://yoursite.com/2019/09/22/IdentityServer4%E7%9A%84%E6%9C%80%E4%BD%B3%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="NoRain">
+<meta property="og:description" content="简介&amp;emsp;&amp;emsp;本人做微服务项目也有一段时间了，在微服务中让我感触颇深的就是这个IdentityServer4了，ID4（IdentityServer4的简称）中涉及的概念颇多，本文不谈概念（我怕读者没耐心看下去），在这分享下我个人的使用心得。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/20190922143616.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922144810.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922141927.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922145030.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922145141.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922145426.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922145606.png">
+<meta property="og:image" content="http://yoursite.com/images/20190922145731.png">
+<meta property="article:published_time" content="2019-09-22T04:49:45.000Z">
+<meta property="article:modified_time" content="2019-09-22T09:02:34.098Z">
+<meta property="article:author" content="NoRain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/20190922143616.png">
+  
+    <link rel="alternate" href="/atom.xml" title="NoRain" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">NoRain</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-IdentityServer4的最佳使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/22/IdentityServer4%E7%9A%84%E6%9C%80%E4%BD%B3%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time datetime="2019-09-22T04:49:45.000Z" itemprop="datePublished">2019-09-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      IdentityServer4的最佳使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>&emsp;&emsp;本人做微服务项目也有一段时间了，在微服务中让我感触颇深的就是这个IdentityServer4了，ID4（IdentityServer4的简称）中涉及的概念颇多，本文不谈概念（我怕读者没耐心看下去），在这分享下我个人的使用心得。</p>
+<a id="more"></a>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>&emsp;&emsp;1. ID4简介</p>
+<p>&emsp;&emsp;2. ID4使用</p>
+<h3 id="ID4简介"><a href="#ID4简介" class="headerlink" title="ID4简介"></a>ID4简介</h3><p>&emsp;&emsp;相信大家都知道面向对象中的封装（把通用的功能封装起来，减少程序中大量重复代码），我们知道在一个单体系统中有很多的重复模块，例如：身份认证、权限控制检查等，在单体系统中，这些都可以使用aop统一在一个地方控制。而在分布式系统，每个系统都需要进行身份认证、权限检查等。这时，每个系统都得写一套同样的代码来进行这些控制，我们能不能像单体系统那样在一个地方进行这些流程呢？<strong>这时我们可以使用IdentityServer4来实现。</strong></p>
+<p>&emsp;&emsp;IdentityServer4是一个集成 <strong>身份认证和授权</strong> 的组件，使用OpenId Connect（身份识别框架） 和 Auth2.0（授权框架）来进行身份认证和授权的。</p>
+<h3 id="ID4使用"><a href="#ID4使用" class="headerlink" title="ID4使用"></a>ID4使用</h3><blockquote>
+<h3 id="我这里只列出几个主要的类，其它，可以下载项目来看。关于如何使用，代码有点多，我比较懒，就没怎么讲解，感兴趣的小伙伴可以加个QQ-1983702356-来讨论下。"><a href="#我这里只列出几个主要的类，其它，可以下载项目来看。关于如何使用，代码有点多，我比较懒，就没怎么讲解，感兴趣的小伙伴可以加个QQ-1983702356-来讨论下。" class="headerlink" title="我这里只列出几个主要的类，其它，可以下载项目来看。关于如何使用，代码有点多，我比较懒，就没怎么讲解，感兴趣的小伙伴可以加个QQ:1983702356 来讨论下。"></a>我这里只列出几个主要的类，其它，可以下载项目来看。<span style="color:red;">关于如何使用，代码有点多，我比较懒，就没怎么讲解，感兴趣的小伙伴可以加个QQ:1983702356 来讨论下。</span></h3></blockquote>
+<ul>
+<li><p><strong>项目地址：</strong> <a target="_blank" rel="noopener" href="https://github.com/MapleWithoutWords/IdentityServer4Demo">https://github.com/MapleWithoutWords/IdentityServer4Demo</a><br>（<span style="color:red;">注意：下载项目后，记得把数据库链接字符串改下</span>）</p>
+</li>
+<li><p>项目环境：</p>
+<ol>
+<li>.net core 2.2</li>
+<li>IdentityServer 2.5</li>
+<li>Mysql 8</li>
+</ol>
+</li>
+<li><p>项目结构：<br><img src="/images/20190922143616.png" alt="项目结构"></p>
+</li>
+</ul>
+<h4 id="WebApplication1-（IdentityServer4）项目，安装-Install-Package-IdentityServer4-Version-2-5-0，"><a href="#WebApplication1-（IdentityServer4）项目，安装-Install-Package-IdentityServer4-Version-2-5-0，" class="headerlink" title="WebApplication1 （IdentityServer4）项目，安装 Install-Package IdentityServer4 -Version 2.5.0，"></a>WebApplication1 （IdentityServer4）项目，安装 <strong>Install-Package IdentityServer4 -Version 2.5.0</strong>，</h4><ol>
+<li><p>以下几个类比较关键</p>
+<ol>
+<li><p>Config.cs。<strong>主要是获取身份资源</strong></p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Config</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;IdentityResource&gt; <span class="title">GetIdentityResources</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> List&lt;IdentityResource&gt;</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">new</span> IdentityResources.OpenId(), <span class="comment">//必须要添加，否则报无效的 scope 错误</span></span><br><span class="line">        <span class="keyword">new</span> IdentityResources.Profile(),</span><br><span class="line">        <span class="keyword">new</span> IdentityResources.Email()</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>TestClientStore.cs  <strong>加载IdentityServer4的client</strong></p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 加载IdentityServer4的client</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestClientStore</span> : <span class="title">IClientStore</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Service层中的一个接口</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> IClientService ClientSvc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestClientStore</span>(<span class="params">IClientService ClientSvc</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.ClientSvc = ClientSvc;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;Client&gt; <span class="title">FindClientByIdAsync</span>(<span class="params"><span class="keyword">string</span> clientId</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> dto = <span class="keyword">await</span> ClientSvc.FindClientByIdAsync(clientId);</span><br><span class="line">        <span class="keyword">if</span> (dto==<span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> scopes = dto.APIResources.Select(e =&gt; e.Name).ToList();</span><br><span class="line">        scopes.Add(IdentityServerConstants.StandardScopes.OpenId);</span><br><span class="line">        scopes.Add(IdentityServerConstants.StandardScopes.Profile);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Client</span><br><span class="line">        &#123;</span><br><span class="line">            ClientId = dto.Client.Id,<span class="comment">//API账号、客户端Id</span></span><br><span class="line">            AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,</span><br><span class="line">            ClientSecrets =</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Secret(dto.Client.Secret.Sha256())<span class="comment">//秘钥</span></span><br><span class="line">            &#125;,</span><br><span class="line">            AllowedScopes = scopes<span class="comment">//这个账号支持访问哪些应用</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+</li>
+</ol>
+<pre><code>3. TestReourceStore.cs，**加载IdentityServer的APIResource**
+    &lt;!--hexoPostRenderEscape:&lt;figure class=&quot;highlight c#&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;&lt;span class=&quot;doctag&quot;&gt;///&lt;/span&gt; &lt;span class=&quot;doctag&quot;&gt;&amp;lt;summary&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;&lt;span class=&quot;doctag&quot;&gt;///&lt;/span&gt; 加载IdentityServer的APIResource&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;&lt;span class=&quot;doctag&quot;&gt;///&lt;/span&gt; &lt;span class=&quot;doctag&quot;&gt;&amp;lt;/summary&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;TestReourceStore&lt;/span&gt; : &lt;span class=&quot;title&quot;&gt;IResourceStore&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; IApiResourceService resourceSvc &amp;#123; &lt;span class=&quot;keyword&quot;&gt;get&lt;/span&gt;; &lt;span class=&quot;keyword&quot;&gt;set&lt;/span&gt;; &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;TestReourceStore&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;IApiResourceService resourceSvc&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.resourceSvc = resourceSvc;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task&amp;lt;ApiResource&amp;gt; &lt;span class=&quot;title&quot;&gt;FindApiResourceAsync&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt; name&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; entity = &lt;span class=&quot;keyword&quot;&gt;await&lt;/span&gt; resourceSvc.GetByNameAsync(name);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ApiResource(entity.Name,entity.DisplayName);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task&amp;lt;IEnumerable&amp;lt;ApiResource&amp;gt;&amp;gt; FindApiResourcesByScopeAsync(IEnumerable&amp;lt;&lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;&amp;gt; scopeNames)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; list = &lt;span class=&quot;keyword&quot;&gt;await&lt;/span&gt; resourceSvc.GetDatasByNamesAsync(scopeNames);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; list.Select(e=&amp;gt;&lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ApiResource(e.Name,e.DisplayName));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task&amp;lt;IEnumerable&amp;lt;IdentityResource&amp;gt;&amp;gt; FindIdentityResourcesByScopeAsync(IEnumerable&amp;lt;&lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;&amp;gt; scopeNames)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; Config.GetIdentityResources().Where(e =&amp;gt; scopeNames.Contains(e.Name)).ToList();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task&amp;lt;Resources&amp;gt; &lt;span class=&quot;title&quot;&gt;GetAllResourcesAsync&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; list = &lt;span class=&quot;keyword&quot;&gt;await&lt;/span&gt; resourceSvc.GetNoramlAll();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; resouces = list.Select(e =&amp;gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ApiResource(e.Name, e.DisplayName)).ToList();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Resources&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            ApiResources = resouces&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;:hexoPostRenderEscape--&gt;
+
+4. TestResourceOwnerPasswordValidator.cs，**IdentityServer4登录验证**
+    &lt;!--hexoPostRenderEscape:&lt;figure class=&quot;highlight c#&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;&lt;span class=&quot;doctag&quot;&gt;///&lt;/span&gt; &lt;span class=&quot;doctag&quot;&gt;&amp;lt;summary&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;&lt;span class=&quot;doctag&quot;&gt;///&lt;/span&gt; IdentityServer4登录验证&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;&lt;span class=&quot;doctag&quot;&gt;///&lt;/span&gt; &lt;span class=&quot;doctag&quot;&gt;&amp;lt;/summary&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;TestResourceOwnerPasswordValidator&lt;/span&gt; : &lt;span class=&quot;title&quot;&gt;IResourceOwnerPasswordValidator&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; IUserService UserSvc &amp;#123; &lt;span class=&quot;keyword&quot;&gt;get&lt;/span&gt;; &lt;span class=&quot;keyword&quot;&gt;set&lt;/span&gt;; &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;TestResourceOwnerPasswordValidator&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;IUserService UserSvc&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.UserSvc = UserSvc;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task &lt;span class=&quot;title&quot;&gt;ValidateAsync&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;ResourceOwnerPasswordValidationContext context&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt; account = context.UserName;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt; pwd = context.Password;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; loginResult = &lt;span class=&quot;keyword&quot;&gt;await&lt;/span&gt; UserSvc.Login(account, pwd);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (loginResult == &lt;span class=&quot;literal&quot;&gt;null&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            context.Result = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; GrantValidationResult(TokenRequestErrors.InvalidGrant, &lt;span class=&quot;string&quot;&gt;&amp;quot;invalid custom credential&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        context.Result = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; GrantValidationResult(&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                subject: context.UserName,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                authenticationMethod: &lt;span class=&quot;string&quot;&gt;&amp;quot;custom&amp;quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                claims: &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Claim[] &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                    &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Claim(&lt;span class=&quot;string&quot;&gt;&amp;quot;Name&amp;quot;&lt;/span&gt;,context.UserName),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                    &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Claim(&lt;span class=&quot;string&quot;&gt;&amp;quot;UserId&amp;quot;&lt;/span&gt;,loginResult.Id),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                    &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Claim(&lt;span class=&quot;string&quot;&gt;&amp;quot;Roles&amp;quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&amp;quot;Admin,Contact&amp;quot;&lt;/span&gt;),    &lt;span class=&quot;comment&quot;&gt;//模拟获取登录用户的角色信息&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                    &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Claim(&lt;span class=&quot;string&quot;&gt;&amp;quot;Premissions&amp;quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&amp;quot;List,Delete&amp;quot;&lt;/span&gt;) &lt;span class=&quot;comment&quot;&gt;//模拟获取登录用户的权限信息&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                    &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;:hexoPostRenderEscape--&gt;
+
+5. ProfileService.cs，**用户信息**
+    &lt;!--hexoPostRenderEscape:&lt;figure class=&quot;highlight c#&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ProfileService&lt;/span&gt; : &lt;span class=&quot;title&quot;&gt;IProfileService&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task &lt;span class=&quot;title&quot;&gt;GetProfileDataAsync&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;ProfileDataRequestContext context&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; claims = context.Subject.Claims.ToList();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        context.IssuedClaims = claims.ToList();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;async&lt;/span&gt; Task &lt;span class=&quot;title&quot;&gt;IsActiveAsync&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;IsActiveContext context&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        context.IsActive = &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;:hexoPostRenderEscape--&gt;</code></pre>
+<ol start="2">
+<li>Startup类</li>
+</ol>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Startup</span>(<span class="params">IConfiguration configuration</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Configuration = configuration;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> IConfiguration Configuration &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This method gets called by the runtime. Use this method to add services to the container.</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            services.Configure&lt;CookiePolicyOptions&gt;(options =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// This lambda determines whether user consent for non-essential cookies is needed for a given request.</span></span><br><span class="line">                options.CheckConsentNeeded = context =&gt; <span class="literal">true</span>;</span><br><span class="line">                options.MinimumSameSitePolicy = SameSiteMode.None;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//services.AddAuthentication(&quot;Bearer&quot;)</span></span><br><span class="line">            <span class="comment">//         .AddIdentityServerAuthentication(options =&gt;</span></span><br><span class="line">            <span class="comment">//         &#123;</span></span><br><span class="line">            <span class="comment">//             options.Authority = &quot;http://localhost:9500&quot;;//identity server 地址</span></span><br><span class="line">            <span class="comment">//             options.RequireHttpsMetadata = false;</span></span><br><span class="line">            <span class="comment">//         &#125;);</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">string</span> conStr = Configuration[<span class="string">&quot;connectionString&quot;</span>];</span><br><span class="line">            services.AddDbContext&lt;TestDbContext&gt;(options =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                options.UseMySql(conStr);</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment"><span class="doctag">///</span>依赖注入Service层</span></span><br><span class="line">            AddSigletons(services);</span><br><span class="line"></span><br><span class="line">            <span class="meta">#<span class="meta-keyword">region</span> ID4服务配置</span></span><br><span class="line">            <span class="keyword">var</span> id4Build = services.AddIdentityServer()</span><br><span class="line">                        .AddDeveloperSigningCredential()</span><br><span class="line">                        .AddInMemoryIdentityResources(Config.GetIdentityResources());</span><br><span class="line">            <span class="comment">//加载apiresource</span></span><br><span class="line">            id4Build.Services.AddTransient&lt;IResourceStore, TestReourceStore&gt;();</span><br><span class="line">            <span class="comment">//加载client</span></span><br><span class="line">            id4Build.Services.AddTransient&lt;IClientStore, TestClientStore&gt;();</span><br><span class="line">            <span class="comment">//登录验证</span></span><br><span class="line">            id4Build.Services.AddTransient&lt;IResourceOwnerPasswordValidator, TestResourceOwnerPasswordValidator&gt;();</span><br><span class="line">            <span class="comment">//加载profile。profile是用户信息</span></span><br><span class="line">            id4Build.Services.AddTransient&lt;IProfileService, ProfileService&gt;();</span><br><span class="line">            <span class="meta">#<span class="meta-keyword">endregion</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">//services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddSigletons</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">var</span> assem = Assembly.Load(<span class="string">&quot;Test.Service&quot;</span>);</span><br><span class="line">            <span class="keyword">var</span> list = assem.GetTypes().Where(e =&gt; e.IsAbstract == <span class="literal">false</span> &amp;&amp; <span class="keyword">typeof</span>(ISignFac).IsAssignableFrom(e));</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> instanType <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> instanType.GetInterfaces())</span><br><span class="line">                &#123;</span><br><span class="line">                    services.AddSingleton(item, instanType);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (env.IsDevelopment())</span><br><span class="line">            &#123;</span><br><span class="line">                app.UseDeveloperExceptionPage();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                app.UseExceptionHandler(<span class="string">&quot;/Home/Error&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//插入id4中间件</span></span><br><span class="line">            app.UseIdentityServer();</span><br><span class="line">            <span class="comment">//app.UseAuthentication();</span></span><br><span class="line">            <span class="comment">//app.UseStaticFiles();</span></span><br><span class="line">            <span class="comment">//app.UseCookiePolicy();</span></span><br><span class="line">            <span class="comment">//app.UseMvc(routes =&gt;</span></span><br><span class="line">            <span class="comment">//&#123;</span></span><br><span class="line">            <span class="comment">//    routes.MapRoute(</span></span><br><span class="line">            <span class="comment">//        name: &quot;default&quot;,</span></span><br><span class="line">            <span class="comment">//        template: &quot;&#123;controller=Home&#125;/&#123;action=Index&#125;/&#123;id?&#125;&quot;);</span></span><br><span class="line">            <span class="comment">//&#125;);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>WebApplication3 API项目，修改Startup，并添加一个控制器，在方法上打上一个标签<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Startup</span>(<span class="params">IConfiguration configuration</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Configuration = configuration;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> IConfiguration Configuration &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// This method gets called by the runtime. Use this method to add services to the container.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        services.AddAuthentication(<span class="string">&quot;Bearer&quot;</span>)</span><br><span class="line">                 .AddIdentityServerAuthentication(options =&gt;</span><br><span class="line">                 &#123;</span><br><span class="line">                     options.Authority = <span class="string">&quot;http://localhost:9500&quot;</span>;<span class="comment">//identity server 地址</span></span><br><span class="line">                     options.RequireHttpsMetadata = <span class="literal">false</span>;</span><br><span class="line">                 &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> conStr = Configuration[<span class="string">&quot;connectionString&quot;</span>];</span><br><span class="line">        services.AddDbContext&lt;TestDbContext&gt;(options =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            options.UseMySql(conStr);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment"><span class="doctag">///</span>依赖注入Service层</span></span><br><span class="line">        AddSigletons(services);</span><br><span class="line">        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddSigletons</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> assem = Assembly.Load(<span class="string">&quot;Test.Service&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> list = assem.GetTypes().Where(e =&gt; e.IsAbstract == <span class="literal">false</span> &amp;&amp; <span class="keyword">typeof</span>(ISignFac).IsAssignableFrom(e));</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> instanType <span class="keyword">in</span> list)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> instanType.GetInterfaces())</span><br><span class="line">            &#123;</span><br><span class="line">                services.AddSingleton(item, instanType);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (env.IsDevelopment())</span><br><span class="line">        &#123;</span><br><span class="line">            app.UseDeveloperExceptionPage();</span><br><span class="line">        &#125;</span><br><span class="line">        app.UseAuthentication();</span><br><span class="line"></span><br><span class="line">        app.UseMvc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/images/20190922144810.png" alt="控制器"></li>
+</ol>
+<h4 id="运行ConsoleApp1控制台项目，-生成数据库，添加几条数据"><a href="#运行ConsoleApp1控制台项目，-生成数据库，添加几条数据" class="headerlink" title="运行ConsoleApp1控制台项目， 生成数据库，添加几条数据"></a>运行ConsoleApp1控制台项目， 生成数据库，添加几条数据</h4><p><img src="/images/20190922141927.png" alt="运行ConsoleApp1控制台项目"></p>
+<h2 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h2><ol>
+<li><p>在 WebApplication1 目录下运行cmd命令 dotnet run ，启动IdentitServer4，端口是9500<br><img src="/images/20190922145030.png"><br><img src="/images/20190922145141.png"></p>
+</li>
+<li><p>运行项目 WebApplication3 ，端口是5000</p>
+</li>
+<li><p>当我们直接调用 WebApplication3 API中的方法时，发现返回状态码为 401<br><img src="/images/20190922145426.png"></p>
+</li>
+<li><p>请求Id4，复制返回的 access_token<br><img src="/images/20190922145606.png"></p>
+</li>
+<li><p>再请求WebApplication3 API，并在报文头带上token</p>
+</li>
+</ol>
+<p><img src="/images/20190922145731.png"></p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>&emsp;&emsp;个人认为我这种使用方式和其它使用方式最大的好处就是，可以写一个IdentityServer4的Client、APIResource增删改查，然后因为每次请求的时候都是从数据库读取数据的，如果数据被修改了，会立即生效。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/09/22/IdentityServer4%E7%9A%84%E6%9C%80%E4%BD%B3%E4%BD%BF%E7%94%A8/" data-id="ckd8isjfp000960u1dgg1fz3f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/11/HT%E7%BC%96%E8%BE%91%E5%99%A8%E7%9A%84%E6%94%B9%E9%80%A0%E4%B9%8B%E8%B7%AF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          HT编辑器的改造(有时间在写这篇文章)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Abstract%E7%B1%BB%EF%BC%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%A8%81%E5%8A%9B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何使用Abstract类？抽象类的威力</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/30/4-PMP%E8%BF%9B%E5%BA%A6%E7%AE%A1%E7%90%86/">4.PMP进度管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/1-PMP%E6%95%B4%E5%90%88%E7%AE%A1%E7%90%86/">1.PMP整合管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/">&#39; docker操作 &#39;</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/">使用git命令同步git</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/">HT for web 编辑器使用https</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 NoRain<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

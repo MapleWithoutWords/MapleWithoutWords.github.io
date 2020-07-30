@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>解决.net Core中WebApi自动Model验证导致数据格式不能统一 | NoRain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简言：&amp;emsp;&amp;emsp;最近做项目用WebAPI Core时，想把返回模型验证错误信息和数据，统一弄成：{“errorMsg”:”xxx”,”Data”:”xxxx”}这种的格式。然而当我给我的实体类打上Required标签是，却发现：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决.net Core中WebApi自动Model验证导致数据格式不能统一">
+<meta property="og:url" content="http://yoursite.com/2019/09/19/%E8%A7%A3%E5%86%B3-net-Core%E4%B8%ADWebApi%E8%87%AA%E5%8A%A8Model%E9%AA%8C%E8%AF%81%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E4%B8%8D%E8%83%BD%E7%BB%9F%E4%B8%80/index.html">
+<meta property="og:site_name" content="NoRain">
+<meta property="og:description" content="简言：&amp;emsp;&amp;emsp;最近做项目用WebAPI Core时，想把返回模型验证错误信息和数据，统一弄成：{“errorMsg”:”xxx”,”Data”:”xxxx”}这种的格式。然而当我给我的实体类打上Required标签是，却发现：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/1525201-20190110105859008-1862447114.png">
+<meta property="article:published_time" content="2019-09-19T04:20:22.000Z">
+<meta property="article:modified_time" content="2019-09-22T05:39:46.916Z">
+<meta property="article:author" content="NoRain">
+<meta property="article:tag" content="随笔">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/1525201-20190110105859008-1862447114.png">
+  
+    <link rel="alternate" href="/atom.xml" title="NoRain" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">NoRain</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-解决-net-Core中WebApi自动Model验证导致数据格式不能统一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/19/%E8%A7%A3%E5%86%B3-net-Core%E4%B8%ADWebApi%E8%87%AA%E5%8A%A8Model%E9%AA%8C%E8%AF%81%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E4%B8%8D%E8%83%BD%E7%BB%9F%E4%B8%80/" class="article-date">
+  <time datetime="2019-09-19T04:20:22.000Z" itemprop="datePublished">2019-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      解决.net Core中WebApi自动Model验证导致数据格式不能统一
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简言："><a href="#简言：" class="headerlink" title="简言："></a>简言：</h2><p>&emsp;&emsp;最近做项目用WebAPI Core时，想把返回模型验证错误信息和数据，统一弄成：{“errorMsg”:”xxx”,”Data”:”xxxx”}这种的格式。然而当我给我的实体类打上Required标签是，却发现：</p>
+<a id="more"></a>
+
+<p><img src="/images/1525201-20190110105859008-1862447114.png" alt="webapi自动验证生成的"></p>
+<p>&emsp;&emsp;WebApi Core怎么自动进行model验证了。我想能不能自己像在MVC里面那样自己控制model验证：ModelState.IsValid。找了很多资料，都没有关于.net core web api的解决方法。最终我利用<strong>IResultFilter</strong>过滤器实现了我的需求。</p>
+<h2 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h2><ol>
+<li><p>首先第一步：建一个统一数据格式的类。我的接口还是用http状态码来判断请求是否成功（当然你也可以加上其它信息）：</p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">APIResult</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> ErrorMsg &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">object</span> Data &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后再建一个继承自IResultFilter的类：</p>
+</li>
+</ol>
+<pre><code>&lt;!--hexoPostRenderEscape:&lt;figure class=&quot;highlight c#&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;APIResultFilter&lt;/span&gt; : &lt;span class=&quot;title&quot;&gt;IResultFilter&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;OnResultExecuted&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;ResultExecutedContext context&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;OnResultExecuting&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;ResultExecutingContext context&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;/span&gt;    &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;//因为webapi core自动验证Model，返回的类型是：BadRequestObjectResult。我是通过反射GetType()查看的。&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (context.Result &lt;span class=&quot;keyword&quot;&gt;is&lt;/span&gt; BadRequestObjectResult)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            BadRequestObjectResult res = (BadRequestObjectResult)context.Result;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            SerializableError obj = res.Value &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; SerializableError;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            StringBuilder sb = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; StringBuilder();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;foreach&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; item &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; obj)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; vals = item.Value &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;[];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (vals != &lt;span class=&quot;literal&quot;&gt;null&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                    sb.AppendLine(vals[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            context.Result = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; JsonResult(&lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; APIResult &amp;#123; ErrorMsg = sb.ToString() &amp;#125;) &amp;#123; StatusCode=&lt;span class=&quot;number&quot;&gt;400&lt;/span&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;:hexoPostRenderEscape--&gt;</code></pre>
+<ol start="3">
+<li><p>最后一步就是将Filter添加到进去了：</p>
+ <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span>&#123;</span><br><span class="line">    services.AddMvc(</span><br><span class="line">        options=&gt;&#123;</span><br><span class="line">            options.Filters.Add(<span class="keyword">new</span> APIResultFilter());</span><br><span class="line">        &#125;</span><br><span class="line">    ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>测试结果我就不丢上来了，手动偷懒0-0</p>
+<p>—————————————————-谢谢观看——————————————</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/09/19/%E8%A7%A3%E5%86%B3-net-Core%E4%B8%ADWebApi%E8%87%AA%E5%8A%A8Model%E9%AA%8C%E8%AF%81%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E4%B8%8D%E8%83%BD%E7%BB%9F%E4%B8%80/" data-id="ckd8isjfr000c60u1cmwr3bpp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/09/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Abstract%E7%B1%BB%EF%BC%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%A8%81%E5%8A%9B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何使用Abstract类？抽象类的威力
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/30/4-PMP%E8%BF%9B%E5%BA%A6%E7%AE%A1%E7%90%86/">4.PMP进度管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/1-PMP%E6%95%B4%E5%90%88%E7%AE%A1%E7%90%86/">1.PMP整合管理</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/">&#39; docker操作 &#39;</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/17/%E4%BD%BF%E7%94%A8git%E5%91%BD%E4%BB%A4%E5%90%8C%E6%AD%A5git/">使用git命令同步git</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/31/HT%E4%BD%BF%E7%94%A8https/">HT for web 编辑器使用https</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 NoRain<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -7,15 +7,15 @@
   
   <title>&#39; docker操作 &#39; | NoRain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="目录 简介 docker命令 使用docker制作asp.net core程序镜像  简介之废话连篇 大家好，近来整天忙着开发，今天突然想把电脑上的mysql、以及一些服务都想移植到docker里面去。当我下载完docker并启动时，尴尬就来了，我把docker命令给忘光了。闲来没事，今天写篇文章记录下docker的使用。">
+  <meta name="description" content="目录 简介 docker命令 使用docker制作asp.net core程序镜像">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&#39; docker操作 &#39;">
 <meta property="og:url" content="http://yoursite.com/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/index.html">
 <meta property="og:site_name" content="NoRain">
-<meta property="og:description" content="目录 简介 docker命令 使用docker制作asp.net core程序镜像  简介之废话连篇 大家好，近来整天忙着开发，今天突然想把电脑上的mysql、以及一些服务都想移植到docker里面去。当我下载完docker并启动时，尴尬就来了，我把docker命令给忘光了。闲来没事，今天写篇文章记录下docker的使用。">
+<meta property="og:description" content="目录 简介 docker命令 使用docker制作asp.net core程序镜像">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-06-05T02:07:20.000Z">
-<meta property="article:modified_time" content="2020-06-05T06:31:34.669Z">
+<meta property="article:modified_time" content="2020-07-30T08:16:33.198Z">
 <meta property="article:author" content="NoRain">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
@@ -49,9 +49,9 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">首页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">文章</a>
         
       </nav>
       <nav id="sub-nav">
@@ -94,11 +94,10 @@
 <li>docker命令</li>
 <li>使用docker制作asp.net core程序镜像</li>
 </ol>
+<a id="more"></a>
 <h1 id="简介之废话连篇"><a href="#简介之废话连篇" class="headerlink" title="简介之废话连篇"></a>简介之废话连篇</h1><ul>
 <li>大家好，近来整天忙着开发，今天突然想把电脑上的mysql、以及一些服务都想移植到docker里面去。当我下载完docker并启动时，尴尬就来了，我把docker命令给忘光了。闲来没事，今天写篇文章记录下docker的使用。</li>
 </ul>
-<a id="more"></a>
-
 <h1 id="docker命令"><a href="#docker命令" class="headerlink" title="docker命令"></a>docker命令</h1><h2 id="镜像操作"><a href="#镜像操作" class="headerlink" title="镜像操作"></a>镜像操作</h2><h4 id="1-镜像查看"><a href="#1-镜像查看" class="headerlink" title="1. 镜像查看"></a>1. 镜像查看</h4><figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker images       <span class="comment"># 列出本地images</span></span><br><span class="line"></span><br><span class="line">docker images -a    <span class="comment"># 列出本地images，含中间映像层</span></span><br><span class="line"></span><br><span class="line">docker images -q    <span class="comment"># 只显示镜像ID</span></span><br><span class="line"></span><br><span class="line">docker images -qa   <span class="comment"># 显示镜像ID，含中间映像层</span></span><br><span class="line"></span><br><span class="line">docker images --digests         <span class="comment"># 显示镜像摘要信息(DIGEST列)</span></span><br><span class="line"></span><br><span class="line">docker images --no-trunc        <span class="comment"># 显示镜像完整信息</span></span><br><span class="line"></span><br><span class="line">docker history -H redis         <span class="comment"># 显示指定镜像的历史创建；参数：-H 镜像大小和日期，默认为true；--no-trunc  显示完整的提交记录；-q  仅列出提交记录ID。redis：镜像名</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h4 id="2-镜像搜索"><a href="#2-镜像搜索" class="headerlink" title="2. 镜像搜索"></a>2. 镜像搜索</h4><figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 镜像搜索</span></span><br><span class="line">docker search mysql                             <span class="comment"># 搜索仓库MySQL镜像</span></span><br><span class="line"></span><br><span class="line">docker search --filter=stars=<span class="number">600</span> mysql          <span class="comment">#  --filter=stars=600：只显示 starts&gt;=600 的镜像</span></span><br><span class="line"></span><br><span class="line">docker search --no-trunc mysql                  <span class="comment">#  --no-trunc 显示镜像完整 DESCRIPTION 描述</span></span><br><span class="line"></span><br><span class="line">docker search  --automated mysql                <span class="comment">#  --automated ：只列出 AUTOMATED=OK 的镜像</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -131,7 +130,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/" data-id="ckd8isjfq000b60u1a0ha7sz1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/05/%E5%B8%B8%E7%94%A8%E7%9A%84docker%E5%91%BD%E4%BB%A4/" data-id="ckd8ke669000bpwu1bmpk3vru" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li></ul>
@@ -173,7 +172,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Net-Core/" rel="tag">.Net Core</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HT/" rel="tag">HT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PMP/" rel="tag">PMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
     </div>
   </div>
 
@@ -183,7 +182,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+      <a href="/tags/Net-Core/" style="font-size: 10px;">.Net Core</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HT/" style="font-size: 20px;">HT</a> <a href="/tags/PMP/" style="font-size: 20px;">PMP</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">框架</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a>
     </div>
   </div>
 
@@ -244,9 +243,9 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">文章</a>
   
 </nav>
     
